@@ -1,3 +1,3 @@
-# Twitter
+# Nwitter
 
-Twitter cloned with React and Firebase
+Nwitter cloned with React and Firebase
