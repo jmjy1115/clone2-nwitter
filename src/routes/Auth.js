@@ -1,8 +1,10 @@
+import { auth, createUser, signIn } from 'fbase';
 import { useState } from 'react';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [newAccount, setNewAccount] = useState(true);
 
   const onChange = (event) => {
     const {
@@ -12,9 +14,24 @@ const Auth = () => {
     else if (name === 'password') setPassword(value);
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
+    try {
+      let data;
+      if (newAccount) {
+        // create newAccount
+        data = await createUser(auth, email, password);
+      } else {
+        // log in
+        data = await signIn(auth, email, password);
+      }
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  const toggleAccount = () => setNewAccount((prev) => !prev);
 
   return (
     <div>
@@ -35,8 +52,11 @@ const Auth = () => {
           value={password}
           onChange={onChange}
         />
-        <input type='submit' value='Log In' />
+        <input type='submit' value={newAccount ? 'Create Account' : 'Log In'} />
       </form>
+      <span onClick={toggleAccount}>
+        {newAccount ? 'Sing In' : 'Creat Account'}
+      </span>
     </div>
   );
 }
